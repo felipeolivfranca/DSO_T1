@@ -1,3 +1,5 @@
+import sys
+
 from controle.controlador_atendimento import ControladorAtendimento
 from controle.controlador_clinica import ControladorClinica
 from controle.controlador_paciente import ControladorPaciente
@@ -33,34 +35,51 @@ class ControladorPrincipal:
         )
 
     def iniciar(self):
-        pass
+        try:
+            self.abrir_tela()
+        except (KeyboardInterrupt, EOFError):
+            self.encerrar()
 
     def abrir_tela(self):
-        pass
+        opcoes = {1: self.__abrir_tela_paciente, 2: self.__abrir_tela_profissional,
+                  3: self.__abrir_tela_clinica, 4: self.__abrir_tela_tipo_atendimento,
+                  5: self.__abrir_tela_atendimento, 6: self.__abrir_tela_procedimento,
+                  7: self.__abrir_tela_pagamento, 8: self.__abrir_tela_relatorio}
+        while True:
+            opcao = self.__tela.mostra_menu()
+            if opcao == 0:
+                self.encerrar()
+            try:
+                opcoes[opcao]()
+            except (KeyboardInterrupt, EOFError):
+                raise
+            except Exception as e:
+                self.__tela.mostra_mensagem(f"Erro inesperado: {e}")
 
     def __abrir_tela_paciente(self):
-        pass
+        self.__controlador_paciente.abrir_tela()
 
     def __abrir_tela_profissional(self):
-        pass
+        self.__controlador_profissional.abrir_tela()
 
     def __abrir_tela_clinica(self):
-        pass
+        self.__controlador_clinica.abrir_tela()
 
     def __abrir_tela_tipo_atendimento(self):
-        pass
+        self.__controlador_tipo_atendimento.abrir_tela()
 
     def __abrir_tela_atendimento(self):
-        pass
+        self.__controlador_atendimento.abrir_tela()
 
     def __abrir_tela_procedimento(self):
-        pass
+        self.__controlador_procedimento.abrir_tela()
 
     def __abrir_tela_pagamento(self):
-        pass
+        self.__controlador_pagamento.abrir_tela()
 
     def __abrir_tela_relatorio(self):
-        pass
+        self.__controlador_relatorio.abrir_tela()
 
     def encerrar(self):
-        pass
+        self.__tela.mostra_mensagem("\nSistema encerrado. Até logo!")
+        sys.exit(0)

@@ -146,6 +146,14 @@ class Atendimento:
                 f"O valor pago excede o restante ({self.calcularTotalRestante()})")
         self.__pagamentos.append(pg)
 
+    def removerPagamento(self, pg: Pagamento):
+        for pag in self.__pagamentos:
+            if pag.id == pg.id:
+                self.__pagamentos.remove(pag)
+                return
+        raise NaoEncontradoException(
+            f"Pagamento {pg.id} não pertence ao atendimento {self.__id}")
+
     def calcularValorTotal(self) -> Decimal:
         return self.__valor + sum((proc.custo for proc in self.__procedimentos), Decimal(0))
 
