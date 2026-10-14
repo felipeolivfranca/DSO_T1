@@ -36,7 +36,4 @@ class PagamentoCartaoCredito(Pagamento):
         self.__bandeira = bandeira
 
     def descrever_forma(self) -> str:
-        pass
-
-    def calcular_valor_restante(self) -> Decimal:
-        pass
+        return f"Cartão de crédito {self.__bandeira} final {self.__numero_cartao[-4:]}"

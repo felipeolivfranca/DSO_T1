@@ -27,4 +27,4 @@ class ProfissionalSaude(Pessoa):
         self.__registro_profissional = registro_profissional
 
     def obterPapel(self) -> str:
-        pass
+        return "Profissional de Saúde"

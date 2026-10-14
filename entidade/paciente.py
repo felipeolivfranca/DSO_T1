@@ -8,4 +8,4 @@ class Paciente(Pessoa):
         super().__init__(nome, celular, cpf, data_nascimento)
 
     def obterPapel(self) -> str:
-        pass
+        return "Paciente"

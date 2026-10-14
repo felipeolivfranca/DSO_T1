@@ -26,7 +26,4 @@ class PagamentoPix(Pagamento):
         self.__cpf_pagador = cpf_pagador
 
     def descrever_forma(self) -> str:
-        pass
-
-    def calcular_valor_restante(self) -> Decimal:
-        pass
+        return f"PIX (CPF do pagador: {self.__cpf_pagador})"

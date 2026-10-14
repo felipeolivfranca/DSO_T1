@@ -65,6 +65,5 @@ class Pagamento(ABC):
     def descrever_forma(self) -> str:
         pass
 
-    @abstractmethod
     def calcular_valor_restante(self) -> Decimal:
-        pass
+        return self.__atendimento.calcularTotalRestante()

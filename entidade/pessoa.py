@@ -43,10 +43,15 @@ class Pessoa(ABC):
         self.__data_nascimento = data_nascimento
 
     def calcularIdade(self, dataReferencia: date) -> int:
-        pass
+        idade = dataReferencia.year - self.__data_nascimento.year
+        ainda_nao_fez_aniversario = (dataReferencia.month, dataReferencia.day) < \
+            (self.__data_nascimento.month, self.__data_nascimento.day)
+        if ainda_nao_fez_aniversario:
+            idade -= 1
+        return idade
 
     def ehMaiorDeIdade(self, dataReferencia: date) -> bool:
-        pass
+        return self.calcularIdade(dataReferencia) >= 18
 
     @abstractmethod
     def obterPapel(self) -> str:

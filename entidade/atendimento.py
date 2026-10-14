@@ -8,6 +8,9 @@ from entidade.pessoa import Pessoa
 from entidade.procedimento import Procedimento
 from entidade.profissional_saude import ProfissionalSaude
 from entidade.tipo_atendimento import TipoAtendimento
+from excecoes.ja_cadastrado_exception import JaCadastradoException
+from excecoes.nao_encontrado_exception import NaoEncontradoException
+from excecoes.pagamento_invalido_exception import PagamentoInvalidoException
 
 
 class Atendimento:
@@ -116,22 +119,44 @@ class Atendimento:
         return self.__procedimentos
 
     def adicionarProcedimento(self, p: Procedimento):
-        pass
+        if any(proc.id == p.id for proc in self.__procedimentos):
+            raise JaCadastradoException(
+                f"Procedimento {p.id} já registrado no atendimento {self.__id}")
+        self.__procedimentos.append(p)
 
     def removerProcedimento(self, p: Procedimento):
-        pass
+        for proc in self.__procedimentos:
+            if proc.id == p.id:
+                self.__procedimentos.remove(proc)
+                return
+        raise NaoEncontradoException(
+            f"Procedimento {p.id} não pertence ao atendimento {self.__id}")
 
     def adicionarPagamento(self, pg: Pagamento):
-        pass
+        if any(pag.id == pg.id for pag in self.__pagamentos):
+            raise JaCadastradoException(
+                f"Pagamento {pg.id} já registrado no atendimento {self.__id}")
+        if pg.data > self.__data:
+            raise PagamentoInvalidoException(
+                "O pagamento deve ser realizado até a data do atendimento")
+        if pg.valor_pago <= 0:
+            raise PagamentoInvalidoException("O valor pago deve ser maior que zero")
+        if pg.valor_pago > self.calcularTotalRestante():
+            raise PagamentoInvalidoException(
+                f"O valor pago excede o restante ({self.calcularTotalRestante()})")
+        self.__pagamentos.append(pg)
+
+    def calcularValorTotal(self) -> Decimal:
+        return self.__valor + sum((proc.custo for proc in self.__procedimentos), Decimal(0))
 
     def calcularTotalPago(self) -> Decimal:
-        pass
+        return sum((pag.valor_pago for pag in self.__pagamentos), Decimal(0))
 
     def calcularTotalRestante(self) -> Decimal:
-        pass
+        return self.calcularValorTotal() - self.calcularTotalPago()
 
     def estaQuitado(self) -> bool:
-        pass
+        return self.calcularTotalRestante() <= 0
 
     def pacienteEhMenor(self) -> bool:
-        pass
+        return not self.__paciente.ehMaiorDeIdade(self.__data)

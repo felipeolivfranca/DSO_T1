@@ -17,7 +17,4 @@ class PagamentoDinheiro(Pagamento):
         super().__init__(id, data, atendimento, paciente, valor_pago)
 
     def descrever_forma(self) -> str:
-        pass
-
-    def calcular_valor_restante(self) -> Decimal:
-        pass
+        return "Dinheiro"
