@@ -105,7 +105,9 @@ class Clinica:
         # são deslocados para o "dia seguinte" (+24h).
         abertura = self.__em_minutos(self.__horario_abertura)
         fechamento = self.__em_minutos(self.__horario_fechamento)
-        if fechamento <= abertura:
+        if abertura == fechamento:  # aberta 24h
+            return True
+        if fechamento < abertura:
             fechamento += self.__MINUTOS_DIA
 
         ini = self.__em_minutos(inicio)
