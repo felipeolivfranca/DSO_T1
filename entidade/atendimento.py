@@ -14,10 +14,10 @@ from excecoes.pagamento_invalido_exception import PagamentoInvalidoException
 
 
 class Atendimento:
-    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: ProfissionalSaude,
+    def __init__(self, id: int clinica: Clinica, paciente: Paciente, profissional: ProfissionalSaude,
                  data_atendimento: date, horario_inicio: time, horario_fim: time,
-                 tipo_atendimento: TipoAtendimento, valor: Decimal, id_atendimento: int):
-        self.__id = id_atendimento
+                 tipo_atendimento: TipoAtendimento, valor: Decimal):
+        self.__id = id
         self.__clinica = clinica
         self.__paciente = paciente
         self.__profissional = profissional
@@ -118,41 +118,41 @@ class Atendimento:
     def procedimentos(self) -> list[Procedimento]:
         return self.__procedimentos
 
-    def adicionarProcedimento(self, p: Procedimento):
-        if any(proc.id == p.id for proc in self.__procedimentos):
+    def adicionarProcedimento(self, procedimento: Procedimento):
+        if any(proc.id == procedimento.id for proc in self.__procedimentos):
             raise JaCadastradoException(
-                f"Procedimento {p.id} já registrado no atendimento {self.__id}")
-        self.__procedimentos.append(p)
+                f"Procedimento {procedimento.id} já registrado no atendimento {self.__id}")
+        self.__procedimentos.append(procedimento)
 
-    def removerProcedimento(self, p: Procedimento):
+    def removerProcedimento(self, procedimento: Procedimento):
         for proc in self.__procedimentos:
-            if proc.id == p.id:
+            if proc.id == procedimento.id:
                 self.__procedimentos.remove(proc)
                 return
         raise NaoEncontradoException(
-            f"Procedimento {p.id} não pertence ao atendimento {self.__id}")
+            f"Procedimento {procedimento.id} não pertence ao atendimento {self.__id}")
 
-    def adicionarPagamento(self, pg: Pagamento):
-        if any(pag.id == pg.id for pag in self.__pagamentos):
+    def adicionarPagamento(self, pagamento: Pagamento):
+        if any(pag.id == pagamento.id for pag in self.__pagamentos):
             raise JaCadastradoException(
-                f"Pagamento {pg.id} já registrado no atendimento {self.__id}")
-        if pg.data > self.__data:
+                f"Pagamento {pagamento.id} já registrado no atendimento {self.__id}")
+        if pagamento.data > self.__data:
             raise PagamentoInvalidoException(
                 "O pagamento deve ser realizado até a data do atendimento")
-        if pg.valor_pago <= 0:
+        if pagamento.valor_pago <= 0:
             raise PagamentoInvalidoException("O valor pago deve ser maior que zero")
-        if pg.valor_pago > self.calcularTotalRestante():
+        if pagamento.valor_pago > self.calcularTotalRestante():
             raise PagamentoInvalidoException(
                 f"O valor pago excede o restante ({self.calcularTotalRestante()})")
-        self.__pagamentos.append(pg)
+        self.__pagamentos.append(pagamento)
 
-    def removerPagamento(self, pg: Pagamento):
+    def removerPagamento(self, pagamento: Pagamento):
         for pag in self.__pagamentos:
-            if pag.id == pg.id:
+            if pag.id == pagamento.id:
                 self.__pagamentos.remove(pag)
                 return
         raise NaoEncontradoException(
-            f"Pagamento {pg.id} não pertence ao atendimento {self.__id}")
+            f"Pagamento {pagamento.id} não pertence ao atendimento {self.__id}")
 
     def calcularValorTotal(self) -> Decimal:
         return self.__valor + sum((proc.custo for proc in self.__procedimentos), Decimal(0))
