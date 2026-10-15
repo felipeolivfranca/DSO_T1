@@ -147,7 +147,7 @@ class ControladorAtendimentoTest(unittest.TestCase):
         atendimento = self.controlador.buscar_por_id(1)
         self.assertEqual(atendimento.paciente.nome, "João")
         self.assertIsNone(atendimento.responsavel)
-        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").totalAtendimentos(), 1)
+        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").total_atendimentos(), 1)
 
     def test_ids_sao_sequenciais(self):
         self.sistema.cadastrar_atendimento("Vida", CPF_JOAO)
@@ -203,8 +203,8 @@ class ControladorAtendimentoTest(unittest.TestCase):
         atendimento = self.controlador.buscar_por_id(1)
         self.assertEqual(atendimento.clinica.nome, "Noite")
         self.assertEqual(atendimento.valor, Decimal("150"))
-        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").totalAtendimentos(), 0)
-        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Noite").totalAtendimentos(), 1)
+        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").total_atendimentos(), 0)
+        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Noite").total_atendimentos(), 1)
 
     def test_alterar_data_para_antes_de_um_pagamento(self):
         self.sistema.cadastrar_atendimento("Vida", CPF_JOAO)
@@ -218,7 +218,7 @@ class ControladorAtendimentoTest(unittest.TestCase):
         self.sistema.cadastrar_atendimento("Vida", CPF_JOAO)
         executar(self.controlador.excluir_atendimento, ["1"])
         self.assertEqual(self.controlador.atendimentos, [])
-        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").totalAtendimentos(), 0)
+        self.assertEqual(self.sistema.clinicas.buscar_por_nome("Vida").total_atendimentos(), 0)
 
     def test_nao_exclui_atendimento_com_pagamentos(self):
         self.sistema.cadastrar_atendimento("Vida", CPF_JOAO)
@@ -243,7 +243,7 @@ class ControladorProcedimentoTest(unittest.TestCase):
 
     def test_incluir(self):
         self.assertEqual(self.controlador.buscar_por_id(1).descricao, "ECG")
-        self.assertEqual(self.atendimento.calcularValorTotal(), Decimal("150"))
+        self.assertEqual(self.atendimento.calcular_valor_total(), Decimal("150"))
 
     def test_incluir_em_atendimento_inexistente(self):
         with self.assertRaises(NaoEncontradoException):
@@ -251,7 +251,7 @@ class ControladorProcedimentoTest(unittest.TestCase):
 
     def test_alterar(self):
         executar(self.controlador.alterar_procedimento, ["1", "ECG completo", "70", CPF_ANA])
-        self.assertEqual(self.atendimento.calcularValorTotal(), Decimal("170"))
+        self.assertEqual(self.atendimento.calcular_valor_total(), Decimal("170"))
 
     def test_excluir(self):
         executar(self.controlador.excluir_procedimento, ["1"])
@@ -275,7 +275,7 @@ class ControladorPagamentoTest(unittest.TestCase):
                          ["3", "1", DATA_ATENDIMENTO, "50", "4111111111111111", "Visa"])
         self.assertIsInstance(self.controlador.buscar_por_id(2), PagamentoPix)
         self.assertIsInstance(self.controlador.buscar_por_id(3), PagamentoCartaoCredito)
-        self.assertTrue(self.atendimento.estaQuitado())
+        self.assertTrue(self.atendimento.esta_quitado())
         self.assertIn("Atendimento quitado", saida)
 
     def test_pagamento_depois_do_atendimento(self):
@@ -289,7 +289,7 @@ class ControladorPagamentoTest(unittest.TestCase):
     def test_alterar_considera_o_valor_antigo(self):
         self.sistema.pagar_dinheiro(1, DATA_ATENDIMENTO, "100")
         executar(self.controlador.alterar_pagamento, ["1", DATA_ATENDIMENTO, "150"])
-        self.assertTrue(self.atendimento.estaQuitado())
+        self.assertTrue(self.atendimento.esta_quitado())
         with self.assertRaises(PagamentoInvalidoException):
             executar(self.controlador.alterar_pagamento, ["1", DATA_ATENDIMENTO, "151"])
 
@@ -303,7 +303,7 @@ class ControladorPagamentoTest(unittest.TestCase):
     def test_excluir_devolve_o_valor_ao_restante(self):
         self.sistema.pagar_dinheiro(1, DATA_ATENDIMENTO, "100")
         executar(self.controlador.excluir_pagamento, ["1"])
-        self.assertEqual(self.atendimento.calcularTotalRestante(), Decimal("150"))
+        self.assertEqual(self.atendimento.calcular_total_restante(), Decimal("150"))
         with self.assertRaises(NaoEncontradoException):
             self.controlador.buscar_por_id(1)
 

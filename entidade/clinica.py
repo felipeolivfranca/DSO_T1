@@ -100,7 +100,7 @@ class Clinica:
         raise NaoEncontradoException(
             f"Atendimento {a.id} não pertence à clínica {self.__nome}")
 
-    def funcionaNoHorario(self, inicio: time, fim: time) -> bool:
+    def funciona_no_horario(self, inicio: time, fim: time) -> bool:
         # Trabalha em minutos desde 00:00; horários que passam da meia-noite
         # são deslocados para o "dia seguinte" (+24h).
         abertura = self.__em_minutos(self.__horario_abertura)
@@ -124,5 +124,5 @@ class Clinica:
     def __em_minutos(horario: time) -> int:
         return horario.hour * 60 + horario.minute
 
-    def totalAtendimentos(self) -> int:
+    def total_atendimentos(self) -> int:
         return len(self.__atendimentos)

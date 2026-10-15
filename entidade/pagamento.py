@@ -66,4 +66,4 @@ class Pagamento(ABC):
         pass
 
     def calcular_valor_restante(self) -> Decimal:
-        return self.__atendimento.calcularTotalRestante()
+        return self.__atendimento.calcular_total_restante()

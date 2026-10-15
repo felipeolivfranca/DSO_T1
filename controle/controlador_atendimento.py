@@ -87,10 +87,10 @@ class ControladorAtendimento:
                 "horario_fim": atendimento.horario_fim,
                 "tipo": atendimento.tipo.descricao,
                 "valor": atendimento.valor,
-                "valor_total": atendimento.calcularValorTotal(),
-                "total_pago": atendimento.calcularTotalPago(),
-                "restante": atendimento.calcularTotalRestante(),
-                "quitado": atendimento.estaQuitado(),
+                "valor_total": atendimento.calcular_valor_total(),
+                "total_pago": atendimento.calcular_total_pago(),
+                "restante": atendimento.calcular_total_restante(),
+                "quitado": atendimento.esta_quitado(),
                 "procedimentos": [p.descricao for p in atendimento.procedimentos],
             })
 
@@ -129,7 +129,7 @@ class ControladorAtendimento:
                                        dados["horario_fim"])
 
         dados["responsavel"] = None
-        if not dados["paciente"].ehMaiorDeIdade(dados["data"]):
+        if not dados["paciente"].eh_maior_de_idade(dados["data"]):
             self.__tela.mostra_mensagem(
                 "Paciente menor de idade: é obrigatório informar um responsável.")
             dados["responsavel"] = self.__buscar_pessoa(self.__tela.pega_cpf_atendimento())
@@ -149,20 +149,20 @@ class ControladorAtendimento:
 
     def __validar_idade_e_responsavel(self, paciente: Paciente, responsavel: Pessoa,
                                       data_atendimento: date):
-        if paciente.ehMaiorDeIdade(data_atendimento):
+        if paciente.eh_maior_de_idade(data_atendimento):
             return
         if responsavel is None:
             raise OperacaoInvalidaException(
                 "Pacientes menores de 18 anos precisam de um responsável")
         if responsavel.cpf == paciente.cpf:
             raise OperacaoInvalidaException("O paciente não pode ser o próprio responsável")
-        if not responsavel.ehMaiorDeIdade(data_atendimento):
+        if not responsavel.eh_maior_de_idade(data_atendimento):
             raise OperacaoInvalidaException("O responsável deve ter 18 anos ou mais")
 
     def __validar_horario_clinica(self, clinica: Clinica, inicio: time, fim: time):
         if inicio == fim:
             raise OperacaoInvalidaException("O horário de início e de fim não podem ser iguais")
-        if not clinica.funcionaNoHorario(inicio, fim):
+        if not clinica.funciona_no_horario(inicio, fim):
             raise OperacaoInvalidaException(
                 f"O atendimento deve ocorrer dentro do horário de funcionamento da clínica "
                 f"({clinica.horario_abertura.strftime('%H:%M')} às "

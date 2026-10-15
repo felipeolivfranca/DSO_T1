@@ -50,7 +50,7 @@ class ControladorPaciente:
                 "celular": paciente.celular,
                 "cpf": paciente.cpf,
                 "data_nascimento": paciente.data_nascimento,
-                "idade": paciente.calcularIdade(date.today()),
+                "idade": paciente.calcular_idade(date.today()),
             })
 
     def abrir_tela(self):

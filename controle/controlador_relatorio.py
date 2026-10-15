@@ -15,9 +15,9 @@ class ControladorRelatorio:
         clinicas = self.__controlador_clinica.clinicas
         if not clinicas:
             raise NaoEncontradoException("Nenhuma clínica cadastrada")
-        ordenadas = sorted(clinicas, key=lambda c: c.totalAtendimentos(), reverse=True)
+        ordenadas = sorted(clinicas, key=lambda c: c.total_atendimentos(), reverse=True)
         self.__tela.mostra_ranking_clinicas([
-            {"nome": c.nome, "cidade": c.cidade, "total": c.totalAtendimentos()}
+            {"nome": c.nome, "cidade": c.cidade, "total": c.total_atendimentos()}
             for c in ordenadas
         ])
 
@@ -25,8 +25,8 @@ class ControladorRelatorio:
         atendimentos = self.__controlador_atendimento.atendimentos
         if not atendimentos:
             raise NaoEncontradoException("Nenhum atendimento cadastrado")
-        maior = max(atendimentos, key=lambda a: a.calcularValorTotal())
-        menor = min(atendimentos, key=lambda a: a.calcularValorTotal())
+        maior = max(atendimentos, key=lambda a: a.calcular_valor_total())
+        menor = min(atendimentos, key=lambda a: a.calcular_valor_total())
         self.__tela.mostra_extremos_atendimentos(self.__dados_atendimento(maior),
                                                  self.__dados_atendimento(menor))
 
@@ -75,7 +75,7 @@ class ControladorRelatorio:
             "paciente": atendimento.paciente.nome,
             "clinica": atendimento.clinica.nome,
             "data": atendimento.data,
-            "valor_total": atendimento.calcularValorTotal(),
+            "valor_total": atendimento.calcular_valor_total(),
         }
 
     def __dados_procedimento(self, atendimento, procedimento) -> dict:

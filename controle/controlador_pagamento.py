@@ -34,7 +34,7 @@ class ControladorPagamento:
                                                cartao["bandeira"])
         else:
             pagamento = PagamentoDinheiro(*argumentos)
-        atendimento.adicionarPagamento(pagamento)
+        atendimento.adicionar_pagamento(pagamento)
         self.__pagamentos.append(pagamento)
         self.__proximo_id += 1
         self.__tela.mostra_mensagem(f"Pagamento {pagamento.id} registrado com sucesso!")
@@ -45,7 +45,7 @@ class ControladorPagamento:
         dados = self.__tela.pega_dados_pagamento(com_atendimento=False)
         atendimento = pagamento.atendimento
         self.validar_data_pagamento(dados["data"], atendimento)
-        disponivel = atendimento.calcularTotalRestante() + pagamento.valor_pago
+        disponivel = atendimento.calcular_total_restante() + pagamento.valor_pago
         if dados["valor_pago"] <= 0:
             raise PagamentoInvalidoException("O valor pago deve ser maior que zero")
         if dados["valor_pago"] > disponivel:
@@ -63,7 +63,7 @@ class ControladorPagamento:
 
     def excluir_pagamento(self):
         pagamento = self.buscar_por_id(self.__tela.pega_id())
-        pagamento.atendimento.removerPagamento(pagamento)
+        pagamento.atendimento.remover_pagamento(pagamento)
         self.__pagamentos.remove(pagamento)
         self.__tela.mostra_mensagem("Pagamento excluído com sucesso!")
 
@@ -105,7 +105,7 @@ class ControladorPagamento:
     def consultar_valor_restante(self):
         atendimento = self.__controlador_atendimento.buscar_por_id(
             self.__tela.pega_id("ID do atendimento: "))
-        self.__tela.mostra_valor_restante(atendimento.calcularTotalRestante())
+        self.__tela.mostra_valor_restante(atendimento.calcular_total_restante())
 
     def validar_data_pagamento(self, data: date, atendimento: Atendimento):
         if data > atendimento.data:

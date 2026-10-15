@@ -118,13 +118,13 @@ class Atendimento:
     def procedimentos(self) -> list[Procedimento]:
         return self.__procedimentos
 
-    def adicionarProcedimento(self, p: Procedimento):
+    def adicionar_procedimento(self, p: Procedimento):
         if any(proc.id == p.id for proc in self.__procedimentos):
             raise JaCadastradoException(
                 f"Procedimento {p.id} já registrado no atendimento {self.__id}")
         self.__procedimentos.append(p)
 
-    def removerProcedimento(self, p: Procedimento):
+    def remover_procedimento(self, p: Procedimento):
         for proc in self.__procedimentos:
             if proc.id == p.id:
                 self.__procedimentos.remove(proc)
@@ -132,7 +132,7 @@ class Atendimento:
         raise NaoEncontradoException(
             f"Procedimento {p.id} não pertence ao atendimento {self.__id}")
 
-    def adicionarPagamento(self, pg: Pagamento):
+    def adicionar_pagamento(self, pg: Pagamento):
         if any(pag.id == pg.id for pag in self.__pagamentos):
             raise JaCadastradoException(
                 f"Pagamento {pg.id} já registrado no atendimento {self.__id}")
@@ -141,12 +141,12 @@ class Atendimento:
                 "O pagamento deve ser realizado até a data do atendimento")
         if pg.valor_pago <= 0:
             raise PagamentoInvalidoException("O valor pago deve ser maior que zero")
-        if pg.valor_pago > self.calcularTotalRestante():
+        if pg.valor_pago > self.calcular_total_restante():
             raise PagamentoInvalidoException(
-                f"O valor pago excede o restante ({self.calcularTotalRestante()})")
+                f"O valor pago excede o restante ({self.calcular_total_restante()})")
         self.__pagamentos.append(pg)
 
-    def removerPagamento(self, pg: Pagamento):
+    def remover_pagamento(self, pg: Pagamento):
         for pag in self.__pagamentos:
             if pag.id == pg.id:
                 self.__pagamentos.remove(pag)
@@ -154,17 +154,17 @@ class Atendimento:
         raise NaoEncontradoException(
             f"Pagamento {pg.id} não pertence ao atendimento {self.__id}")
 
-    def calcularValorTotal(self) -> Decimal:
+    def calcular_valor_total(self) -> Decimal:
         return self.__valor + sum((proc.custo for proc in self.__procedimentos), Decimal(0))
 
-    def calcularTotalPago(self) -> Decimal:
+    def calcular_total_pago(self) -> Decimal:
         return sum((pag.valor_pago for pag in self.__pagamentos), Decimal(0))
 
-    def calcularTotalRestante(self) -> Decimal:
-        return self.calcularValorTotal() - self.calcularTotalPago()
+    def calcular_total_restante(self) -> Decimal:
+        return self.calcular_valor_total() - self.calcular_total_pago()
 
-    def estaQuitado(self) -> bool:
-        return self.calcularTotalRestante() <= 0
+    def esta_quitado(self) -> bool:
+        return self.calcular_total_restante() <= 0
 
-    def pacienteEhMenor(self) -> bool:
-        return not self.__paciente.ehMaiorDeIdade(self.__data)
+    def paciente_eh_menor(self) -> bool:
+        return not self.__paciente.eh_maior_de_idade(self.__data)

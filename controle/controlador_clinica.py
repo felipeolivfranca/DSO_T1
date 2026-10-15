@@ -37,7 +37,7 @@ class ControladorClinica:
 
     def excluir_clinica(self):
         clinica = self.buscar_por_nome(self.__tela.pega_nome())
-        if clinica.totalAtendimentos() > 0:
+        if clinica.total_atendimentos() > 0:
             raise OperacaoInvalidaException(
                 f"A clínica {clinica.nome} possui atendimentos e não pode ser excluída")
         self.__clinicas.remove(clinica)
@@ -55,7 +55,7 @@ class ControladorClinica:
                 "horario_abertura": clinica.horario_abertura,
                 "horario_fechamento": clinica.horario_fechamento,
                 "profissionais": [p.nome for p in clinica.profissionais],
-                "total_atendimentos": clinica.totalAtendimentos(),
+                "total_atendimentos": clinica.total_atendimentos(),
             })
 
     def abrir_tela(self):

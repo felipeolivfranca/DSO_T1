@@ -22,7 +22,7 @@ class ControladorProcedimento:
         profissional = self.__controlador_profissional.buscar_por_cpf(dados["cpf_profissional"])
         procedimento = Procedimento(dados["descricao"], dados["custo"], profissional,
                                     self.__proximo_id)
-        atendimento.adicionarProcedimento(procedimento)
+        atendimento.adicionar_procedimento(procedimento)
         self.__proximo_id += 1
         self.__tela.mostra_mensagem(
             f"Procedimento {procedimento.id} registrado no atendimento {atendimento.id}!")
@@ -38,7 +38,7 @@ class ControladorProcedimento:
 
     def excluir_procedimento(self):
         atendimento, procedimento = self.__buscar_com_atendimento(self.__tela.pega_id())
-        atendimento.removerProcedimento(procedimento)
+        atendimento.remover_procedimento(procedimento)
         self.__tela.mostra_mensagem("Procedimento excluído com sucesso!")
 
     def listar_procedimento(self):
