@@ -72,33 +72,33 @@ class Clinica:
     def atendimentos(self) -> list[Atendimento]:
         return self.__atendimentos
 
-    def adicionar_profissional(self, p: ProfissionalSaude):
-        if any(prof.registro_profissional == p.registro_profissional for prof in self.__profissionais):
+    def adicionar_profissional(self, profissional: ProfissionalSaude):
+        if any(prof.registro_profissional == profissional.registro_profissional for prof in self.__profissionais):
             raise JaCadastradoException(
-                f"{p.nome} já está vinculado à clínica {self.__nome}")
-        self.__profissionais.append(p)
+                f"{profissional.nome} já está vinculado à clínica {self.__nome}")
+        self.__profissionais.append(profissional)
 
-    def remover_profissional(self, p: ProfissionalSaude):
+    def remover_profissional(self, profissional: ProfissionalSaude):
         for prof in self.__profissionais:
-            if prof.registro_profissional == p.registro_profissional:
+            if prof.registro_profissional == profissional.registro_profissional:
                 self.__profissionais.remove(prof)
                 return
         raise NaoEncontradoException(
-            f"{p.nome} não está vinculado à clínica {self.__nome}")
+            f"{profissional.nome} não está vinculado à clínica {self.__nome}")
 
-    def adicionar_atendimento(self, a: Atendimento):
-        if any(atend.id == a.id for atend in self.__atendimentos):
+    def adicionar_atendimento(self, atendimento: Atendimento):
+        if any(atend.id == atendimento.id for atend in self.__atendimentos):
             raise JaCadastradoException(
-                f"Atendimento {a.id} já pertence à clínica {self.__nome}")
-        self.__atendimentos.append(a)
+                f"Atendimento {atendimento.id} já pertence à clínica {self.__nome}")
+        self.__atendimentos.append(atendimento)
 
-    def remover_atendimento(self, a: Atendimento):
+    def remover_atendimento(self, atendimento: Atendimento):
         for atend in self.__atendimentos:
-            if atend.id == a.id:
+            if atend.id == atendimento.id:
                 self.__atendimentos.remove(atend)
                 return
         raise NaoEncontradoException(
-            f"Atendimento {a.id} não pertence à clínica {self.__nome}")
+            f"Atendimento {atendimento.id} não pertence à clínica {self.__nome}")
 
     def funcionaNoHorario(self, inicio: time, fim: time) -> bool:
         # Trabalha em minutos desde 00:00; horários que passam da meia-noite
